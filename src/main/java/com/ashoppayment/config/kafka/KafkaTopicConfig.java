@@ -13,6 +13,7 @@ public class KafkaTopicConfig {
 
     private String newOrderTopic = "new_orders";
     private String newPaymentTopic = "payed_orders";
+    private String changeOrdersStatusTopic = "change_orders_status";
 
     @Bean
     public NewTopic newOrdersTopic() {
@@ -28,5 +29,11 @@ public class KafkaTopicConfig {
                 .build();
     }
 
+    @Bean
+    public NewTopic changeOrdersStatusTopic(){
+        return TopicBuilder
+                .name(changeOrdersStatusTopic)
+                .build();
+    }
 }
 

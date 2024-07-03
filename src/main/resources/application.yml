@@ -8,8 +8,3 @@ spring:
     password: postgres
   kafka:
     bootstrap-servers: localhost:29092
-
-kafka:
-  topics:
-      new_orders: new_orders
-      payed_orders: payed_orders
