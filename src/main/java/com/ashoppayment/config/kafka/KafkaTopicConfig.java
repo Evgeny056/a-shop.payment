@@ -15,10 +15,15 @@ public class KafkaTopicConfig {
     private String newPaymentTopic = "payed_orders";
     private String changeOrdersStatusTopic = "change_orders_status";
 
+    private int numPartitions =3;
+
     @Bean
     public NewTopic newOrdersTopic() {
         return TopicBuilder
                 .name(newOrderTopic)
+                .partitions(numPartitions)
+                .replicas(1)
+                .compact()
                 .build();
     }
 

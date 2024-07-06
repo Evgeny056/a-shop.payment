@@ -12,14 +12,18 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class MessageListenerImpl implements MessageListener {
+public class MessageListenerImpl /*implements MessageListener*/ {
 
     private final PaymentService paymentService;
     private final String topic = "new_orders";
 
-    @KafkaListener(topics = topic, groupId = "payment-group")
-    public void listenMessage(CreateOrderRequestDto createOrderRequestDto) {
-            log.info("Received order message from orders service");
+    @KafkaListener(
+            topics = topic,
+            groupId = "payment-group",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
+    public void listenMessage(String key, CreateOrderRequestDto createOrderRequestDto) {
+            log.info("Received order message from orders service with key: {}", key);
             paymentService.payment(createOrderRequestDto);
     }
 }

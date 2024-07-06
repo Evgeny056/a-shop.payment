@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
+import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.ErrorHandlingDeserializer;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
@@ -22,6 +23,7 @@ public class KafkaConsumerConfig {
 
     private final String bootstrapServers = "localhost:29092";
     private final String groupId = "payment-group";
+    private int concurrency = 3;
 
     @Bean
     public ConsumerFactory<String, CreateOrderRequestDto> consumerFactory(ObjectMapper objectMapper) {
@@ -42,6 +44,9 @@ public class KafkaConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, CreateOrderRequestDto> kafkaListenerContainerFactory(ObjectMapper objectMapper) {
         ConcurrentKafkaListenerContainerFactory<String, CreateOrderRequestDto> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory(objectMapper));
+        factory.setConcurrency(concurrency);
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
+        factory.getContainerProperties().setMissingTopicsFatal(false); // Не считать отсутствие тем фатальной ошибкой
         return factory;
     }
 
@@ -49,4 +54,5 @@ public class KafkaConsumerConfig {
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
+
 }
